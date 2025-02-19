@@ -1,0 +1,99 @@
+//QUERY CON SELECT//
+
+SELECT * FROM students WHERE YEAR(date_of_birth) = 1990;
+
+
+SELECT * 
+FROM courses 
+WHERE cfu > 10;
+
+
+
+SELECT * 
+FROM students 
+WHERE YEAR(CURDATE()) - YEAR(date_of_birth) > 30;
+
+
+SELECT * 
+FROM courses 
+WHERE period = 1 AND year = 1;
+
+
+SELECT * 
+FROM exams 
+WHERE date = '2020-06-20' AND hour > '14:00:00';
+
+
+SELECT * 
+FROM degrees 
+WHERE level = 'magistrale';
+
+
+SELECT COUNT(*) AS numero_dipartimenti 
+FROM departments;
+
+
+SELECT COUNT(*) AS insegnanti_senza_telefono 
+FROM teachers 
+WHERE phone IS NULL OR phone = '';
+
+
+
+//QUERY CON JOIN//
+
+SELECT s.*
+FROM students s
+JOIN degrees d ON s.degree_id = d.id
+WHERE d.id = '53';
+
+
+SELECT d.*
+FROM degrees d
+JOIN departments dep ON d.department_id = dep.id
+WHERE d.level = 'Magistrale' AND dep.id = '1';
+
+
+SELECT c.*
+FROM courses c
+JOIN course_teacher ct ON c.id = ct.course_id
+WHERE ct.teacher_id = 44;
+
+
+
+SELECT s.name, s.surname, d.name AS degree_name, dep.name AS department_name
+FROM students s
+JOIN degrees d ON s.degree_id = d.id
+JOIN departments dep ON d.department_id = dep.id
+ORDER BY s.surname, s.name;
+
+
+SELECT d.name AS degree_name, c.name AS course_name, t.name AS teacher_name, t.surname AS teacher_surname
+FROM degrees d
+JOIN courses c ON d.id = c.degree_id
+JOIN course_teacher ct ON c.id = ct.course_id
+JOIN teachers t ON ct.teacher_id = t.id
+ORDER BY d.name, c.name;
+
+
+
+
+//QUERY CON GROUP//
+
+SELECT YEAR(enrolment_date) AS year, COUNT(*) AS total_students
+FROM students
+GROUP BY YEAR(enrolment_date)
+ORDER BY year;
+
+
+SELECT office_address, COUNT(*) AS total_teachers
+FROM teachers
+GROUP BY office_address
+ORDER BY total_teachers DESC;
+
+
+
+SELECT d.name AS department_name, COUNT(deg.id) AS total_degrees
+FROM departments d
+JOIN degrees deg ON d.id = deg.department_id
+GROUP BY d.id, d.name
+ORDER BY total_degrees DESC;
